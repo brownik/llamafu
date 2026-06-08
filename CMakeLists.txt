@@ -82,6 +82,8 @@ if(ANDROID)
     # Android-specific flags
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
+    # Expose POSIX memory mapping APIs for mmap.cpp
+    add_compile_definitions(_XOPEN_SOURCE=700)
 elseif(IOS)
     set(LLAMA_METAL ${LLAMAFU_ENABLE_METAL} CACHE BOOL "Enable Metal for iOS" FORCE)
     set(LLAMA_NATIVE OFF CACHE BOOL "Disable native optimizations for iOS" FORCE)
@@ -226,10 +228,12 @@ elseif(ANDROID)
     target_link_libraries(llamafu_native PRIVATE
         log
         android
+        pthread
     )
     target_link_libraries(llamafu PRIVATE
         log
         android
+        pthread
     )
 elseif(WIN32)
     target_link_libraries(llamafu_native PRIVATE
